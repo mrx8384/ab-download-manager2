@@ -45,7 +45,15 @@ jobs:
 
       - name: Use Android Secrets
         if: matrix.os == 'ubuntu-latest'
+        env:
+          HAS_KEYSTORE: ${{ secrets.ABDM_KEYSTORE_FILE != '' }}
         run: |
+          # without a signing key (e.g. in a fork) skip the Android build instead of failing the release
+          if [ "$HAS_KEYSTORE" != "true" ]; then
+            echo "No Android keystore secret found, skipping Android build"
+            echo "SKIP_ANDROID_BUILD=true" >> $GITHUB_ENV
+            exit 0
+          fi
           echo "ABDM_KEYSTORE_FILE=${{ secrets.ABDM_KEYSTORE_FILE }}" >> $GITHUB_ENV
           echo "ABDM_KEYSTORE_FILE_PASSWORD=${{ secrets.ABDM_KEYSTORE_FILE_PASSWORD }}" >> $GITHUB_ENV
           echo "ABDM_KEYSTORE_KEY_ALIAS=${{ secrets.ABDM_KEYSTORE_KEY_ALIAS }}" >> $GITHUB_ENV

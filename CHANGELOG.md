@@ -14,6 +14,12 @@
 
 ### Security
 
+## 1.11.3-retry.1
+
+### Added
+
+- Keep retrying downloads when the internet connection is lost, until the connection comes back (new setting: "Keep Retrying When Connection Is Lost", on by default)
+
 ## 1.11.2
 
 ### Added
