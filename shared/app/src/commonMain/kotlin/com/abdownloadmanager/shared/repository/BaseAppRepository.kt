@@ -70,6 +70,7 @@ open class BaseAppRepository(
     val appendExtensionToIncompleteDownloads = appSettings.appendExtensionToIncompleteDownloads
     val useSparseFileAllocation = appSettings.useSparseFileAllocation
     val maxDownloadRetryCount = appSettings.maxDownloadRetryCount
+    val keepRetryingOnNetworkError = appSettings.keepRetryingOnNetworkError
     val useAverageSpeed = appSettings.useAverageSpeed
     val saveLocation = appSettings.defaultDownloadFolder
     val apiEnabled = appSettings.apiEnabled
@@ -109,6 +110,7 @@ open class BaseAppRepository(
         downloadSettings.appendExtensionToIncompleteDownloads = appendExtensionToIncompleteDownloads.value
         downloadSettings.useSparseFileAllocation = useSparseFileAllocation.value
         downloadSettings.maxDownloadRetryCount = maxDownloadRetryCount.value
+        downloadSettings.keepRetryingOnNetworkError = keepRetryingOnNetworkError.value
         downloadSettings.globalSpeedLimit = speedLimiter.value
     }
 
@@ -192,6 +194,12 @@ open class BaseAppRepository(
             .debounce(500.milliseconds)
             .onEach {
                 downloadSettings.maxDownloadRetryCount = it
+                downloadManager.reloadSetting()
+            }.launchIn(scope)
+        keepRetryingOnNetworkError
+            .debounce(500.milliseconds)
+            .onEach {
+                downloadSettings.keepRetryingOnNetworkError = it
                 downloadManager.reloadSetting()
             }.launchIn(scope)
         trackDeletedFilesOnDisk

@@ -166,6 +166,17 @@ object CommonSettings {
         )
     }
 
+    fun keepRetryingOnNetworkError(appRepository: BaseAppRepository): BooleanConfigurable {
+        return BooleanConfigurable(
+            title = Res.string.settings_keep_retrying_on_network_error.asStringSource(),
+            description = Res.string.settings_keep_retrying_on_network_error_description.asStringSource(),
+            backedBy = appRepository.keepRetryingOnNetworkError,
+            describe = {
+                it.asToggledStringSource()
+            },
+        )
+    }
+
     fun useSparseFileAllocation(appRepository: BaseAppRepository): BooleanConfigurable {
         return BooleanConfigurable(
             title = Res.string.settings_use_sparse_file_allocation.asStringSource(),
