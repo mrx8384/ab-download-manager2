@@ -1,6 +1,6 @@
-APP_NAME="ABDownloadManager"
-NATIVE_MESSAGING_HOST_NAME="ABDownloadManagerNativeMessagingHost"
-CLI_NAME="ABDownloadManagerCli"
+APP_NAME="ATDownloadManager"
+NATIVE_MESSAGING_HOST_NAME="ATDownloadManagerNativeMessagingHost"
+CLI_NAME="ATDownloadManagerCli"
 
 awaitTermination(){
   local processName="${1:?}"

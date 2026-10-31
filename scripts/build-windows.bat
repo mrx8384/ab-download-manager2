@@ -1,10 +1,10 @@
 @echo off
-rem Builds the Windows version of AB Download Manager (installer + portable zip).
+rem Builds the Windows version of AT Download Manager (installer + portable zip).
 rem Installs what is missing: JDK 25, NSIS and the Android SDK (needed by the shared code).
 rem Output: build\ci-release\binaries
 setlocal EnableExtensions EnableDelayedExpansion
 cd /d "%~dp0.."
-echo ==== AB Download Manager - Windows build ====
+echo ==== AT Download Manager - Windows build ====
 echo.
 
 rem ---------- 1) JDK 25 ----------

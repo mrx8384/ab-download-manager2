@@ -108,13 +108,13 @@ buildConfig {
     buildConfigField(
         "PROJECT_WEBSITE",
         provider {
-            "https://abdownloadmanager.com"
+            "https://github.com/mrx8384/ab-download-manager2"
         }
     )
     buildConfigField(
         "PROJECT_SOURCE_CODE",
         provider {
-            "https://github.com/amir1376/ab-download-manager"
+            "https://github.com/mrx8384/ab-download-manager2"
         }
     )
     buildConfigField(
@@ -126,13 +126,13 @@ buildConfig {
     buildConfigField(
         "PROJECT_GITHUB_OWNER",
         provider {
-            "amir1376"
+            "mrx8384"
         }
     )
     buildConfigField(
         "PROJECT_GITHUB_REPO",
         provider {
-            "ab-download-manager"
+            "ab-download-manager2"
         }
     )
     buildConfigField(
