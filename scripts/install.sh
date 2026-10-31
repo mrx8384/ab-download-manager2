@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Downloads the latest tarball from https://github.com/amir1376/ab-download-manager/releases and unpacks it into ~/.local/.
+# Downloads the latest tarball from https://github.com/mrx8384/ab-download-manager2/releases and unpacks it into ~/.local/.
 # Creates a .desktop entry for the app in ~/.local/share/applications based on FreeDesktop specifications.
 
 set -euo pipefail
@@ -14,10 +14,10 @@ logger() {
 
   if [[ "$1" == "error" ]]; then
     # Red color for errors
-    echo -e "${timestamp} -- ABDM-Installer [Error]: \033[0;31m$@\033[0m" | tee -a ${LOG_FILE}
+    echo -e "${timestamp} -- ATDM-Installer [Error]: \033[0;31m$@\033[0m" | tee -a ${LOG_FILE}
   else
     # Default color for non-error messages
-    echo -e "${timestamp} -- ABDM-Installer [Info]: $@" | tee -a ${LOG_FILE}
+    echo -e "${timestamp} -- ATDM-Installer [Info]: $@" | tee -a ${LOG_FILE}
   fi
 }
 
@@ -114,13 +114,13 @@ get_arch() {
   esac
 }
 
-APP_NAME="ABDownloadManager"
+APP_NAME="ATDownloadManager"
 PLATFORM="linux"
 ARCH="$(get_arch)" || exit 1
 EXT="tar.gz"
 
-RELEASE_URL="https://api.github.com/repos/amir1376/ab-download-manager/releases/latest"
-GITHUB_RELEASE_DOWNLOAD="https://github.com/amir1376/ab-download-manager/releases/download"
+RELEASE_URL="https://api.github.com/repos/mrx8384/ab-download-manager2/releases/latest"
+GITHUB_RELEASE_DOWNLOAD="https://github.com/mrx8384/ab-download-manager2/releases/download"
 
 LATEST_VERSION=$(curl -fSs "${RELEASE_URL}" | grep '"tag_name":' | sed -E 's/.*"tag_name": ?"([^"]+)".*/\1/')
 
@@ -171,9 +171,9 @@ delete_old_version() {
 
 # --- Generate a .desktop file for the app
 generate_desktop_file() {
-    cat <<EOF > "$HOME/.local/share/applications/com.abdownloadmanager.desktop"
+    cat <<EOF > "$HOME/.local/share/applications/com.atdownloadmanager.desktop"
 [Desktop Entry]
-Name=AB Download Manager
+Name=AT Download Manager
 Comment=Manage and organize your download files better than before
 GenericName=Downloader
 Categories=Utility;Network;
@@ -190,7 +190,7 @@ download_zip() {
     # Remove the app tarball if it exists in /tmp
     remove_if_exists "/tmp/$ASSET_NAME"
 
-    logger "downloading AB Download Manager ..."
+    logger "downloading AT Download Manager ..."
     # Perform the download with curl
     if curl --progress-bar -fSL -o "/tmp/$ASSET_NAME" "${DOWNLOAD_URL}"; then
         logger "download finished successfully"
@@ -206,7 +206,7 @@ download_zip() {
 # --- Install the app
 install_app() {
 
-    logger "Installing AB Download Manager ..."
+    logger "Installing AT Download Manager ..."
     # --- Setup ~/.local directories
     mkdir -p "$HOME/.local/bin" "$HOME/.local/share/applications"
     tar -xzf "/tmp/$ASSET_NAME" -C "$HOME/.local"
@@ -220,7 +220,7 @@ install_app() {
     # Create a .desktop file in ~/.local/share/applications
     generate_desktop_file
 
-    logger "AB Download Manager installed successfully"
+    logger "AT Download Manager installed successfully"
     logger "it can be found in Applications menu or run '$APP_NAME' in terminal"
     logger "Make sure $HOME/.local/bin exists in PATH"
     logger "installation logs saved in: ${LOG_FILE}"
@@ -258,7 +258,7 @@ main() {
     check_dependencies
     installed_version=$(check_if_installed)
     if [ -n "$installed_version" ]; then
-        logger "AB Download Manager v$installed_version is currently installed."
+        logger "AT Download Manager v$installed_version is currently installed."
         update_app "$installed_version"
     else
         download_zip

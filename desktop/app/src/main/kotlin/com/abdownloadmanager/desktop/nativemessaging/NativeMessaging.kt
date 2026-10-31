@@ -74,7 +74,7 @@ class NativeMessaging(
         execFile: String
     ): FirefoxNativeMessagingManifest {
         return FirefoxNativeMessagingManifest(
-            name = AppInfo.packageName,
+            name = BROWSER_INTEGRATION_HOST_NAME,
             description = AppInfo.displayName,
             path = execFile,
             type = "stdio",
@@ -88,7 +88,7 @@ class NativeMessaging(
         execFile: String,
     ): ChromeNativeMessagingManifest {
         return ChromeNativeMessagingManifest(
-            name = AppInfo.packageName,
+            name = BROWSER_INTEGRATION_HOST_NAME,
             description = AppInfo.displayName,
             path = execFile,
             type = "stdio",
@@ -99,6 +99,10 @@ class NativeMessaging(
     }
 
     companion object {
+        // the official AB Download Manager browser extension looks for this host name,
+        // so we keep it to stay compatible with that extension
+        const val BROWSER_INTEGRATION_HOST_NAME = "com.abdownloadmanager"
+
         fun getDefault(json: Json): NativeMessaging {
             return NativeMessaging(NativeMessagingManifestApplier.getForCurrentPlatform(json))
         }

@@ -4,7 +4,7 @@ set -euo pipefail
 # set -x
 
 
-APP_NAME="ABDownloadManager"
+APP_NAME="ATDownloadManager"
 
 LOG_FILE="/tmp/ab-dm-uninstaller.log"
 
@@ -14,10 +14,10 @@ logger() {
 
   if [[ "$1" == "error" ]]; then
     # Red color for errors
-    echo -e "${timestamp} -- ABDM-Uninstaller [Error]: \033[0;31m$@\033[0m" | tee -a ${LOG_FILE}
+    echo -e "${timestamp} -- ATDM-Uninstaller [Error]: \033[0;31m$@\033[0m" | tee -a ${LOG_FILE}
   else
     # Default color for non-error messages
-    echo -e "${timestamp} -- ABDM-Uninstaller [Info]: $@" | tee -a ${LOG_FILE}
+    echo -e "${timestamp} -- ATDM-Uninstaller [Info]: $@" | tee -a ${LOG_FILE}
   fi
 }
 
@@ -45,10 +45,10 @@ delete_app_config_dir() {
 
     case $answer in
         [Yy]* )
-            remove_if_exists "$HOME/.abdm"
+            remove_if_exists "$HOME/.atdm"
             ;;
         [Nn]* )
-            logger "Remove The $HOME/.abdm directory manually."
+            logger "Remove The $HOME/.atdm directory manually."
             ;;
         * )
             logger error "Please answer yes or no."
@@ -85,7 +85,7 @@ delete_app() {
 
     logger "removing $APP_NAME desktop file ..."
     # --- Remove the .desktop file in ~/.local/share/applications
-    remove_if_exists "$HOME/.local/share/applications/com.abdownloadmanager.desktop"
+    remove_if_exists "$HOME/.local/share/applications/com.atdownloadmanager.desktop"
 
     logger "removing $APP_NAME link ..."
     remove_if_exists "$HOME/.local/bin/$APP_NAME"
@@ -94,14 +94,14 @@ delete_app() {
     remove_if_exists "$HOME/.local/$APP_NAME"
 
     logger "removing $APP_NAME autostart at boot file ..."
-    remove_if_exists "$HOME/.config/autostart/com.abdownloadmanager.desktop"
+    remove_if_exists "$HOME/.config/autostart/com.atdownloadmanager.desktop"
 
-    if [ -e "$HOME/.abdm" ]; then
-        logger "removing $APP_NAME settings and download lists $HOME/.abdm"
+    if [ -e "$HOME/.atdm" ]; then
+        logger "removing $APP_NAME settings and download lists $HOME/.atdm"
         delete_app_config_dir
     fi
 
-    logger "AB Download Manager completely removed"
+    logger "AT Download Manager completely removed"
 }
 
 main() {

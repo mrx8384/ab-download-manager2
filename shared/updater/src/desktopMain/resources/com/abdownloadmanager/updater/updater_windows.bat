@@ -1,8 +1,8 @@
 @echo off
 
-set APP_NAME=ABDownloadManager
-set NATIVE_MESSAGING_HOST_NAME=ABDownloadManagerNativeMessagingHost
-set CLI_NAME=ABDownloadManagerCli
+set APP_NAME=ATDownloadManager
+set NATIVE_MESSAGING_HOST_NAME=ATDownloadManagerNativeMessagingHost
+set CLI_NAME=ATDownloadManagerCli
 
 call :main "%1" "%2"
 goto :eof
