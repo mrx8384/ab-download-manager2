@@ -9,6 +9,8 @@ data class DownloadSettings(
     var useSparseFileAllocation: Boolean = true,
     var minPartSize: Long = DEFAULT_MIN_PART_SIZE,
     var maxDownloadRetryCount: Int = 0,
+    // when connection is lost, keep retrying (not limited by maxDownloadRetryCount) until it comes back
+    var keepRetryingOnNetworkError: Boolean = true,
     // WARNING: this is used in boot so make sure to update it before booting
     // make it val or add a way to reload it properly
     var appendExtensionToIncompleteDownloads: Boolean = false,

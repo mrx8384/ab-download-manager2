@@ -465,6 +465,20 @@ class HttpDownloadJob(
 
     var failedDownloadTries = 0
     val delayForEachRetry = 3_000L
+
+    // consecutive retries caused by a lost connection (they don't count toward max retries)
+    private var networkFailedTries = 0
+    private val maxDelayForNetworkRetry = 30_000L
+
+    private fun shouldKeepRetryingOnNetworkError(): Boolean {
+        return downloadManager.settings.keepRetryingOnNetworkError
+    }
+
+    // 3s, 6s, 12s, 24s, then every 30s until the connection is back
+    private fun delayForNetworkRetry(tries: Int): Long {
+        val shift = (tries - 1).coerceIn(0, 10)
+        return (delayForEachRetry shl shift).coerceAtMost(maxDelayForNetworkRetry)
+    }
     private var downloadedSizeBeforeRetry = 0L
 
     private var retryJob: Job? = null
@@ -490,13 +504,23 @@ class HttpDownloadJob(
                 return@launch
             }
             val downloadedSize = getDownloadedSize()
-            if (downloadedSize > downloadedSizeBeforeRetry) {
+            val hadProgress = downloadedSize > downloadedSizeBeforeRetry
+            downloadedSizeBeforeRetry = downloadedSize
+            if (hadProgress) {
+                networkFailedTries = 0
+            }
+            if (shouldKeepRetryingOnNetworkError() && ExceptionUtils.isCausedByNetworkError(e)) {
+                // connection is lost, keep retrying until it comes back
+                networkFailedTries++
+                retry(isInFirstResume, delayForNetworkRetry(networkFailedTries))
+                return@launch
+            }
+            if (hadProgress) {
                 // download had progress! so we reset it
                 failedDownloadTries = 0
             } else {
                 failedDownloadTries++
             }
-            downloadedSizeBeforeRetry = downloadedSize
 
             // we always have one try (the initial resume action), after that others are retries!
             val retriedCount = (failedDownloadTries - 1).coerceAtLeast(0)
@@ -508,15 +532,15 @@ class HttpDownloadJob(
         }
     }
 
-    fun retry(isInFirstResume: Boolean) {
+    fun retry(isInFirstResume: Boolean, delayMillis: Long = delayForEachRetry) {
         scope.launch {
             val newScopeResult = retryLock.tryLocked {
                 val job = async {
                     saveState()
                     cancelDownloadScope()
                     stopAllParts()
-                    _status.update { DownloadJobStatus.Retrying(delayForEachRetry) }
-                    delay(delayForEachRetry.milliseconds)
+                    _status.update { DownloadJobStatus.Retrying(delayMillis) }
+                    delay(delayMillis.milliseconds)
                     createAndInitializeDownloadScope()
                 }
                 retryJob = job
@@ -716,6 +740,7 @@ class HttpDownloadJob(
     override suspend fun pause(throwable: Throwable) {
         boot()
         failedDownloadTries = 0
+        networkFailedTries = 0
         cancelRetry()
         cancelDownloadScope()
         stopAllParts()

@@ -22,6 +22,16 @@ object ExceptionUtils {
                 e is SocketTimeoutException
     }
 
+    /**
+     * checks [e] and its causes, because some errors (like [ir.amirab.downloader.exception.PartTooManyErrorException])
+     * wrap the original network error
+     */
+    fun isCausedByNetworkError(e: Throwable): Boolean {
+        return generateSequence(e) { it.cause.takeIf { cause -> cause !== it } }
+            .take(10)
+            .any { isNetworkError(it) }
+    }
+
     fun isResponseError(e: Throwable): Boolean {
         return e is UnSuccessfulResponseException
     }

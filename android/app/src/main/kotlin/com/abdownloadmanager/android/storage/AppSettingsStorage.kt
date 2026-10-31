@@ -62,6 +62,7 @@ class AppSettingsStorage(
     override val useSparseFileAllocation = from(AppSettingsModel.useSparseFileAllocation)
     override val useAverageSpeed = from(AppSettingsModel.useAverageSpeed)
     override val maxDownloadRetryCount = from(AppSettingsModel.maxDownloadRetryCount)
+    override val keepRetryingOnNetworkError = from(AppSettingsModel.keepRetryingOnNetworkError)
     override val showDownloadProgressDialog = from(AppSettingsModel.showDownloadProgressDialog)
     override val showDownloadCompletionDialog = from(AppSettingsModel.showDownloadCompletionDialog)
     override val useSpeedLimit: MutableStateFlow<SpeedLimitMode> = from(AppSettingsModel.useSpeedLimit)
